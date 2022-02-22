@@ -1,23 +1,21 @@
 const router = require('express').Router();
+//handling exceptions for async express routes instead 
+//of using try catch for each route
+const ash = require('express-async-handler');
 let User = require('../models/user.model');
 
 //Get all users
-router.route('/').get((req, res) => {
-    User.find()
-        .then(users => res.json(users))
-        .catch(err => res.status(400).json('Error: ' + err));
-});
+router.get('/', ash(async (req, res) => {
+    res.json(await User.find());
+}));
 
 //Add a user into MongoDB
-router.route('/add').post((req, res) => {
-    res.json(req.body);
-
-    const username = req.body.username;
-    const newUser = new User(username);
-
-    newUser.save()
-        .then(() => res.json('User added!'))
-        .catch(err => res.status(400).json('Error: ' + err));
-});
+router.post('/add', ash(async (req, res) => {
+    console.log(`request: ${req.body}`);
+    const newUser = await User.create({
+        username: req.body.username
+    });
+    res.send("User added!");
+}));
 
 module.exports = router;
