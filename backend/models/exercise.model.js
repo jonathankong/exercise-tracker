@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const Schema = mongoose.Schema;
+const {Schema} = mongoose;
 
 const exerciseSchema = new Schema({
     username: {
@@ -13,11 +13,20 @@ const exerciseSchema = new Schema({
     }, 
     duration: {
         type: Number, 
-        required: true
+        required: true,
+        validate: {
+            validator: v => isNaN(v) == false,
+            message: props => `${props.value} is not a proper Number`
+        }
     }, 
     date: {
         type: Date, 
-        required: true
+        required: true,
+        immutable: true,
+        validate: {
+            validator: v => Date.parse(v) != NaN,
+            message: props => `${props.value} is not in a proper Date format`
+        }
     }, 
 }, {
     timeStamps: true,
