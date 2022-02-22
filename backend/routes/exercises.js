@@ -1,30 +1,23 @@
 const router = require('express').Router();
+//handling exceptions for async express routes instead 
+//of using try catch for each route
+const ash = require('express-async-handler');
 let Exercise = require('../models/exercise.model');
 
 //Find all exercises and return them as json
-router.route('/').get((req, res) => {
-    Exercise.find()
-        .then(exercises => res.json(exercises))
-        .catch(err => res.status(400).json('Error: ' + err));
-});
+router.get('/', ash(async (req, res) => {
+    res.json(await Exercise.find());
+}));
 
 //Add new exercise
-router.route('/add').post((req, res) => {
-    const username = req.body.username;
-    const description = req.body.description;
-    const duration = Number(req.body.duration);
-    const date = Date.parse(req.body.date);
-
-    const newExercise = new Exercise({
-        username,
-        description, 
-        duration, 
-        date
+router.post('/add', ash(async (req, res) => {
+    const newExercise = await Exercise.create({
+        username: req.body.username,
+        description: req.body.description,
+        duration: req.body.duration,
+        date: req.body.date
     });
-
-    newExercise.save()
-        .then(() => res.json('Exercise added!'))
-        .catch(err => res.status(400).json('Error: ' + err));
-});
+    res.json('Exercise added!');
+}));
 
 module.exports = router;
