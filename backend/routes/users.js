@@ -11,7 +11,6 @@ router.get('/', ash(async (req, res) => {
 
 //Add a user into MongoDB
 router.post('/add', ash(async (req, res) => {
-    console.log(`request: ${req.body}`);
     const newUser = await User.create({
         username: req.body.username
     });
