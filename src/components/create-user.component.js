@@ -31,7 +31,7 @@ export default class CreateUser extends Component{
         //testing before connecting to backend
         console.log(user);
 
-        console.log(this.axiosPost(user));
+        console.log(this.postUser(user));
         //Clear form to allow adding multiple users
         this.setState({
             username: ""
@@ -39,7 +39,7 @@ export default class CreateUser extends Component{
     }
 
     //TODO let user of website know what happened
-    async axiosPost(user) {
+    async postUser(user) {
         await axios.post('http://localhost:5000/users/add', user);
     }
 
